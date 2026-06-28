@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Run artifacts (regenerable; large)
+res/tmp/
+res/slurm-logs/
+res/outputs/**/*.pkl
+res/outputs/**/run_checkpoint.*
+
+# Report reference data (large; tracked outside git)
+res/report_data/
+
+# Keep the spinup state and its metadata tracked-by-exception if desired:
+!res/outputs/spinup_ap_trainingmatch_metadata.json
+
+# OS / editor
+.DS_Store
+*.swp
+
+# Data and Model Weights
+*.nc
+*.zarr
+*.h5
+*.hdf5
+*.pt
+*.pth
+.env

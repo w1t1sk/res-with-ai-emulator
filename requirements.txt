@@ -1,0 +1,11 @@
+# Python dependencies for the QDMC rare event sampling project.
+#
+# Install into the "climt" conda environment (see setup_env.sh).
+# NOTE: climt and sympl are NOT on PyPI — they are pre-built in the climt conda
+# environment (compiled C/Fortran GCM) and are intentionally not listed here.
+numpy>=1.24
+scipy>=1.10
+torch>=2.0
+xarray>=2023.1
+matplotlib>=3.7
+jupyter>=1.0

@@ -1,0 +1,14 @@
+{
+  "spinup_years": 3,
+  "soil_conf": 0.7,
+  "rad_conf": 6.0,
+  "sw_max": 150.0,
+  "surface_temperature": 290.0,
+  "ocean_mixed_layer_thickness": 2.0,
+  "soil_layer_thickness": 1.0,
+  "spinup_path": "/home/nishidh/climt_ai/climt_repo/1_NEW/experiments_setup/v16_aquaplanet_nwbox_multirestart/outputs/spinup_ap_trainingmatch.pkl.gz",
+  "progress_every_days": 10,
+  "checkpoint_every_days": 30,
+  "notes": "Aquaplanet spinup matched to the original FuXi training-climate generation script. No land-band modification is applied.",
+  "elapsed_hours": 5.461542339589861
+}

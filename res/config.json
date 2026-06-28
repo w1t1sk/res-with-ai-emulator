@@ -1,0 +1,55 @@
+{
+    "_comment": "Single experiment config for the QDMC rare event sampling pipeline. Paper-faithful defaults (N=400 walkers, M=100 AI members, 37 total days). For a quick smoke test, override on the CLI: `python run.py airres --walkers 4 --members 2`. The default AI+RES scheme is 'ck' (C_schedule_ck); other schedules below are exploratory alternatives. NOTE: the report (section 3.2) states the surface-pressure perturbation amplitude as sqrt(2)*1e-4; this config uses perturbation_magnitude=0.003 as actually run -- see README.",
+
+    "DEFAULT_REGION_NAME": "nw_box",
+    "REGION_NAME": "nw_box",
+    "LAT_S": 20,
+    "LAT_E": 23,
+    "LON_S": 25,
+    "LON_E": 28,
+    "TRACKED_REGIONS": {
+        "nw_box": {
+            "label": "Northwest Box 3x3 (Aquaplanet Coordinates)",
+            "lat_start": 20,
+            "lat_end": 23,
+            "lon_start": 25,
+            "lon_end": 28,
+            "display_bounds": "26.5N-32.1N, 70.3E-75.9E box on aquaplanet grid (northwest-India analog target)"
+        }
+    },
+
+    "N_walkers": 400,
+    "M_members": 100,
+    "total_days": 30,
+    "resample_interval": 5,
+    "L": 7,
+
+    "perturbation_magnitude": 0.003,
+    "perturbation_mode": "iid_uniform",
+    "perturbation_seed_base": 1,
+    "experiment_seed": 314159,
+    "score_rule": "member_mean_final_7day_temperature",
+
+    "ai_scoring_walker_batch_size": 4,
+    "ai_member_microbatch_size": 16,
+    "physics_max_workers": 100,
+    "physics_maxtasksperchild": 8,
+    "physics_pool_chunksize": 1,
+
+    "spinup_years": 3,
+    "spinup_soil_conf": 0.7,
+    "spinup_rad_conf": 6,
+    "spinup_sw_max": 150.0,
+    "spinup_surface_temperature": 290.0,
+    "spinup_ocean_mixed_layer_thickness": 2.0,
+    "spinup_soil_layer_thickness": 1.0,
+    "spinup_progress_every_days": 10,
+    "spinup_checkpoint_every_days": 30,
+    "spinup_relpath": "outputs/spinup_ap_trainingmatch.pkl.gz",
+    "spinup_metadata_relpath": "outputs/spinup_ap_trainingmatch_metadata.json",
+
+    "C_schedule_ck": [0.0, 0.0, 0.0, 1.8, 2.2, 2.6],
+    "C_schedule_normal": [0.0, 0.0, 0.0, 1.6, 1.8, 2.0],
+    "C_schedule_ck4": [0.0, 0.0, 0.0, 1.6, 1.9, 2.3],
+    "C_schedule_ck6": [0.0, 0.0, 0.0, 1.8, 2.2, 2.6]
+}

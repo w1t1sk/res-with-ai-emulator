@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [[ -n "${UPD_EMULATOR_REPO_ROOT:-}" ]]; then
+  REPO_ROOT="$UPD_EMULATOR_REPO_ROOT"
+elif [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
+  REPO_ROOT="$SLURM_SUBMIT_DIR"
+else
+  REPO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+fi
+export UPD_EMULATOR_REPO_ROOT="$REPO_ROOT"
+source "$REPO_ROOT/scripts/utils/_common.sh"
+activate_env_if_needed
+PYTHON_BIN=$(resolve_python_bin)
+
+export PYTHONPATH="$REPO_ROOT/src:${PYTHONPATH:-}"
+export PYTHONUNBUFFERED="${PYTHONUNBUFFERED:-1}"
+export OMP_NUM_THREADS="${OMP_NUM_THREADS:-8}"
+export MPLCONFIGDIR="${MPLCONFIGDIR:-/tmp/upd_emulator_mpl_${USER:-user}}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-/tmp/upd_emulator_xdg_cache_${USER:-user}}"
+export CUDA_VISIBLE_DEVICES=""
+mkdir -p "$MPLCONFIGDIR"
+mkdir -p "$XDG_CACHE_HOME"
+
+export UPD_EMULATOR_DATA_ROOT="${UPD_EMULATOR_DATA_ROOT:-/home/nishidh/fuxi-ens/data}"
+export UPD_EMULATOR_STATS_PATH="${UPD_EMULATOR_STATS_PATH:-$REPO_ROOT/resources/stats/exac_input_stats.pt}"
+export UPD_EMULATOR_CLIMATOLOGY_PATH="${UPD_EMULATOR_CLIMATOLOGY_PATH:-$REPO_ROOT/resources/stats/climatology_run16.pt}"
+export UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_CKPT="${UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_CKPT:-$REPO_ROOT/checkpoints/stage2/latent_hierswin_rollout_best.pt}"
+export UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_DIR="${UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_DIR:-$REPO_ROOT/plots/acc}"
+export UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_LEAD_STEPS="${UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_LEAD_STEPS:-30}"
+export UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_SAMPLE_INDEX="${UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_SAMPLE_INDEX:-0}"
+export UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_ENSEMBLE_MEMBERS="${UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_ENSEMBLE_MEMBERS:-6}"
+
+# Run directly on CPU:
+#   bash scripts/eval/run_evaluate_stage2_latent_hierswin_cpu.sh
+
+"$PYTHON_BIN" "$REPO_ROOT/scripts/eval/evaluate_stage2_latent_hierswin.py" \
+  --data-root "$UPD_EMULATOR_DATA_ROOT" \
+  --stats-path "$UPD_EMULATOR_STATS_PATH" \
+  --climatology-path "$UPD_EMULATOR_CLIMATOLOGY_PATH" \
+  --checkpoint-path "$UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_CKPT" \
+  --output-dir "$UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_DIR" \
+  --lead-steps "$UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_LEAD_STEPS" \
+  --sample-index "$UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_SAMPLE_INDEX" \
+  --ensemble-members "$UPD_EMULATOR_STAGE2_LATENT_HIERSWIN_EVAL_ENSEMBLE_MEMBERS" \
+  "$@"
